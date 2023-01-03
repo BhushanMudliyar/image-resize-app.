@@ -1,0 +1,42 @@
+To build an image resize app, you will need to use a server-side programming language like Python, Ruby, Java, or PHP. You will also need to use a library or framework that provides image processing capabilities, such as Pillow (Python), MiniMagick (Ruby), or ImageMagick (Java, PHP).
+
+Here is an outline of the steps you will need to follow:
+
+Create a form for the user to upload an image and enter the desired width and height.
+When the form is submitted, use the server-side language to save the uploaded image to a temporary location on the server.
+Use the image processing library to open the image and resize it to the specified width and height.
+Save the resized image to a permanent location on the server, or generate a URL that can be used to access the image.
+Display the resized image to the user, or provide a link that they can use to download the image.
+
+Example code using Python and the Pillow library:
+
+from PIL import Image
+
+# Open the image and resize it
+image = Image.open('original.jpg')
+image = image.resize((400, 300))
+
+# Save the resized image
+image.save('resized.jpg')
+
+You can also use this code to generate a URL for the resized image, instead of saving it to the server. Simply create a route that reads the image from memory and returns it as a response, like this:
+
+
+from flask import Flask, send_file
+
+app = Flask(__name__)
+
+@app.route('/resized/<int:width>/<int:height>')
+def resized_image(width, height):
+    # Open the image and resize it
+    image = Image.open('original.jpg')
+    image = image.resize((width, height))
+
+    # Save the image to a temporary buffer
+    buffer = BytesIO()
+    image.save(buffer, format='JPEG')
+    buffer.seek(0)
+
+    # Return the image as a response
+    return send_file(buffer, mimetype='image/jpeg')
+
